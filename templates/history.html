@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Sleep History</h1>
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>TTB</th>
+            <th>SL</th>
+            <th>NOA</th>
+            <th>WASO</th>
+            <th>EMA</th>
+            <th>TOB</th>
+            <th>TIB (min)</th>
+            <th>TST (min)</th>
+            <th>SE (%)</th>
+            <th>Notes</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in records %}
+        <tr>
+            <td>{{ record.date }}</td>
+            <td>{{ record.ttb }}</td>
+            <td>{{ record.sl }}</td>
+            <td>{{ record.noa }}</td>
+            <td>{{ record.waso }}</td>
+            <td>{{ record.ema }}</td>
+            <td>{{ record.tob }}</td>
+            <td>{{ record.tib }}</td>
+            <td>{{ record.tst }}</td>
+            <td>{{ record.se }}</td>
+            <td>{{ record.notes or "" }}</td>
+            <td>
+                <form action="{{ url_for('edit', entry_date=record.date) }}"
+                      method="GET" style="display:inline">
+                    <button type="submit">Edit</button>
+                </form>
+                <form action="{{ url_for('delete', entry_date=record.date) }}"
+                      method="POST" style="display:inline"
+                      onsubmit="return confirm('Delete this entry?');">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

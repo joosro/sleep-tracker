@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Edit Sleep Entry</h1>
+
+{% if record %}
+<form method="POST">
+    <label for="date">Date (TOB date):</label>
+    <input type="date" id="date" name="date" value="{{ record.date }}" disabled><br><br>
+
+    <label for="ttb">TTB (time to bed, e.g. 1030 or -120):</label>
+    <input type="number" id="ttb" name="ttb" value="{{ record.ttb }}" required><br><br>
+
+    <label for="sl">SL (sleep latency, minutes):</label>
+    <input type="number" id="sl" name="sl" value="{{ record.sl }}" required><br><br>
+
+    <label for="noa">NOA (number of awakenings):</label>
+    <input type="number" id="noa" name="noa" value="{{ record.noa }}" required><br><br>
+
+    <label for="waso">WASO (minutes awake during night):</label>
+    <input type="number" id="waso" name="waso" value="{{ record.waso }}" required><br><br>
+
+    <label for="ema">EMA (minutes awake before getting up):</label>
+    <input type="number" id="ema" name="ema" value="{{ record.ema }}" required><br><br>
+
+    <label for="tob">TOB (time out of bed, e.g. 715 or -100):</label>
+    <input type="number" id="tob" name="tob" value="{{ record.tob }}" required><br><br>
+
+    <label for="notes">Notes (optional):</label>
+    <input type="text" id="notes" name="notes" value="{{ record.notes or '' }}"><br><br>
+
+    <button type="submit">Save Changes</button>
+</form>
+{% else %}
+<p>No entry found for that date.</p>
+{% endif %}
+
+<p><a href="{{ url_for('history') }}">Back to History</a></p>
+{% endblock %}

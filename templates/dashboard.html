@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Sleep Dashboard</h1>
+
+<h2>Sleep Efficiency (%)</h2>
+<p>Weekly average, last 13 weeks by default — drag the slider below the chart to see more history.</p>
+<div id="se-chart" style="width:100%;max-width:800px;height:400px;"></div>
+
+<h2>Number of Awakenings</h2>
+<p>Weekly average, last 13 weeks by default — drag the slider below the chart to see more history.</p>
+<div id="noa-chart" style="width:100%;max-width:800px;height:400px;"></div>
+
+<h2>TST vs TIB</h2>
+<p>Weekly averages, full history — drag the slider below the chart to zoom in or out.</p>
+<div id="tst-tib-chart" style="width:100%;max-width:800px;height:400px;"></div>
+
+<h2>Wakefulness Metrics</h2>
+<p>SL, WASO, EMA, and TTA — weekly averages, full history — drag the slider below the chart to zoom in or out.</p>
+<div id="awake-chart" style="width:100%;max-width:800px;height:400px;"></div>
+
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script>
+const weeklyData = {{ weekly_data | tojson }};
+
+const weeks = weeklyData.map(w => w.week);
+const se   = weeklyData.map(w => w.se);
+const noa  = weeklyData.map(w => w.noa);
+const tst  = weeklyData.map(w => w.tst);
+const tib  = weeklyData.map(w => w.tib);
+const sl   = weeklyData.map(w => w.sl);
+const waso = weeklyData.map(w => w.waso);
+const ema  = weeklyData.map(w => w.ema);
+const tta  = weeklyData.map(w => w.tta);
+
+// Headline charts default to last 13 weeks; full history plotted so the
+// range slider can reveal earlier data too
+const N = 13;
+const defaultStart = weeks.length > N ? weeks[weeks.length - N] : weeks[0];
+const defaultEnd = weeks[weeks.length - 1];
+
+Plotly.newPlot('se-chart', [{
+    x: weeks, y: se, type: 'scatter', mode: 'lines+markers', name: 'SE %',
+    line: { color: '#2c5f8a' }
+}], {
+    xaxis: { title: 'Week', range: [defaultStart, defaultEnd], rangeslider: { visible: true } },
+    yaxis: { title: 'SE %' },
+    margin: { t: 20 }
+});
+
+Plotly.newPlot('noa-chart', [{
+    x: weeks, y: noa, type: 'scatter', mode: 'lines+markers', name: 'NOA',
+    line: { color: '#8a4a2c' }
+}], {
+    xaxis: { title: 'Week', range: [defaultStart, defaultEnd], rangeslider: { visible: true } },
+    yaxis: { title: 'Avg NOA' },
+    margin: { t: 20 }
+});
+
+Plotly.newPlot('tst-tib-chart', [
+    { x: weeks, y: tst, type: 'scatter', mode: 'lines', name: 'TST (min)' },
+    { x: weeks, y: tib, type: 'scatter', mode: 'lines', name: 'TIB (min)' }
+], {
+    xaxis: { title: 'Week', rangeslider: { visible: true } },
+    yaxis: { title: 'Minutes' },
+    margin: { t: 20 }
+});
+
+Plotly.newPlot('awake-chart', [
+    { x: weeks, y: sl,   type: 'scatter', mode: 'lines', name: 'SL (min)' },
+    { x: weeks, y: waso, type: 'scatter', mode: 'lines', name: 'WASO (min)' },
+    { x: weeks, y: ema,  type: 'scatter', mode: 'lines', name: 'EMA (min)' },
+    { x: weeks, y: tta,  type: 'scatter', mode: 'lines', name: 'TTA (min)' }
+], {
+    xaxis: { title: 'Week', rangeslider: { visible: true } },
+    yaxis: { title: 'Minutes' },
+    margin: { t: 20 }
+});
+</script>
+{% endblock %}

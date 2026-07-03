@@ -1,0 +1,6 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+scripts/sleep-notes-export.txt
+scripts/import_sleep_data.py
